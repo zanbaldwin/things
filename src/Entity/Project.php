@@ -54,7 +54,7 @@ class Project
     /** @ORM\Column(name="deadline", type="datetime", nullable=true) */
     private ?\DateTimeInterface $deadline;
 
-    /** @ORM\Column(name="completed", type="datetime", nullable=false) */
+    /** @ORM\Column(name="completed", type="datetime", nullable=true) */
     private ?\DateTimeInterface $completionDate;
 
     /**
@@ -81,6 +81,7 @@ class Project
         $this->id = new Ulid;
         $this->area = $area;
         $this->title = $title;
+        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
         $this->tags = new ArrayCollection;
     }
 

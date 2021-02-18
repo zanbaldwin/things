@@ -90,7 +90,7 @@ class Task
         $this->project = $project;
         $this->heading = $heading;
         $this->title = $title;
-        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
         $this->tag = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

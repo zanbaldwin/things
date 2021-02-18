@@ -24,6 +24,14 @@ class Checklist
      */
     private Ulid $id;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Task::class)
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="task", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private Task $task;
+
     /** @ORM\Column(name="description", type="text", length=65535, nullable=false) */
     private string $description;
 
@@ -44,16 +52,27 @@ class Checklist
      */
     private ?Checklist $follows;
 
-    public function __construct(string $description)
+    public function __construct(Task $task, string $description)
     {
         $this->id = new Ulid;
+        $this->task = $task;
         $this->description = $description;
-        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
     }
 
     public function getId(): Ulid
     {
         return $this->id;
+    }
+
+    public function getTask(): Task
+    {
+        return $this->task;
+    }
+
+    public function setTask(Task $task): void
+    {
+        $this->task = $task;
     }
 
     public function getDescription(): string

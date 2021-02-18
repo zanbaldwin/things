@@ -45,7 +45,7 @@ class Area
     {
         $this->id = new Ulid;
         $this->title = $title;
-        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
     }
 
     public function getId(): Ulid

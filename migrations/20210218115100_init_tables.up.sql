@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `areas` (
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `tags` (
+CREATE TABLE IF NOT EXISTS `tags` (
     `id`         BINARY(16)   NOT NULL COMMENT '(DC2Type:ulid)',
     `title`      VARCHAR(255) NOT NULL,
     `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -22,14 +22,14 @@ CREATE TABLE `tags` (
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `projects` (
+CREATE TABLE IF NOT EXISTS `projects` (
     `id`         BINARY(16)   NOT NULL COMMENT '(DC2Type:ulid)',
     `area`       BINARY(16)   NOT NULL COMMENT '(DC2Type:ulid)',
     `title`      VARCHAR(255) NOT NULL,
     `notes`      TEXT                  DEFAULT NULL,
     `start_date` DATETIME              DEFAULT NULL,
     `deadline`   DATETIME              DEFAULT NULL,
-    `completed`  DATETIME     NOT NULL,
+    `completed`  DATETIME              DEFAULT NULL,
     `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `follows`    BINARY(16)            DEFAULT NULL COMMENT '(DC2Type:ulid)',
@@ -41,18 +41,19 @@ CREATE TABLE `projects` (
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `project_tags` (
+CREATE TABLE IF NOT EXISTS `project_tags` (
     `project` BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `tag`     BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-    CONSTRAINT `fk__project_tags__project` FOREIGN KEY (`project`) REFERENCES `projects` (`id`),
-    CONSTRAINT `fk__project_tags__tag`     FOREIGN KEY (`tag`)     REFERENCES `tags` (`id`),
+    CONSTRAINT `fk__project_tags__project` FOREIGN KEY (`project`) REFERENCES `projects` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `fk__project_tags__tag`     FOREIGN KEY (`tag`)     REFERENCES `tags` (`id`)
+        ON DELETE CASCADE,
     PRIMARY KEY (`project`, `tag`)
 ) DEFAULT CHARACTER SET utf8mb4
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `headings`
-(
+CREATE TABLE IF NOT EXISTS `headings` (
     `id`          BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `project`     BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `description` TINYTEXT   NOT NULL,
@@ -68,7 +69,7 @@ CREATE TABLE `headings`
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `tasks` (
+CREATE TABLE IF NOT EXISTS `tasks` (
     `id`         BINARY(16)   NOT NULL COMMENT '(DC2Type:ulid)',
     `project`    BINARY(16)   NOT NULL COMMENT '(DC2Type:ulid)',
     `heading`    BINARY(16)            DEFAULT NULL COMMENT '(DC2Type:ulid)',
@@ -89,24 +90,28 @@ CREATE TABLE `tasks` (
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `task_tags` (
+CREATE TABLE IF NOT EXISTS `task_tags` (
     `task` BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `tag`  BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-    CONSTRAINT `fk__task_tags__task` FOREIGN KEY (`task`) REFERENCES `tasks` (`id`),
-    CONSTRAINT `fk__task_tags__tag`  FOREIGN KEY (`tag`)  REFERENCES `tags` (`id`),
+    CONSTRAINT `fk__task_tags__task` FOREIGN KEY (`task`) REFERENCES `tasks` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `fk__task_tags__tag`  FOREIGN KEY (`tag`)  REFERENCES `tags` (`id`)
+        ON DELETE CASCADE,
     PRIMARY KEY (`task`, `tag`)
 ) DEFAULT CHARACTER SET utf8mb4
   COLLATE `utf8mb4_0900_ai_ci`
   ENGINE = InnoDB;
 
-CREATE TABLE `checklists` (
+CREATE TABLE IF NOT EXISTS `checklists` (
     `id`          BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
+    `task`        BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `description` TEXT       NOT NULL,
     `completed`   DATETIME            DEFAULT NULL,
     `created_at`  DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `follows`     BINARY(16)          DEFAULT NULL COMMENT '(DC2Type:ulid)',
     CONSTRAINT `uqx__checklists__follows` UNIQUE INDEX (`follows`),
+    CONSTRAINT `fk__checklists__task`  FOREIGN KEY (`task`) REFERENCES `tasks` (`id`),
     CONSTRAINT `fk__checklists__follows`  FOREIGN KEY (`follows`) REFERENCES `checklists` (`id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4
