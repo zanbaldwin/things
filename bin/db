@@ -1,2 +1,2 @@
 #!/bin/sh
-docker-compose exec database mysql
+docker-compose exec database mysql things

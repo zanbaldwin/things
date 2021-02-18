@@ -38,6 +38,11 @@ services:
         environment:
             MYSQL_RANDOM_ROOT_PASSWORD: ''
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+            -   target: 3306
+                published: '${DB_PORT:-33068}'
+                protocol: 'tcp'
+                mode: 'host'
 
     migrate:
         image: 'zanbaldwin/things/migrate/development'
