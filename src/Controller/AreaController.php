@@ -28,4 +28,10 @@ class AreaController
             return new AreaResponse($area, $this->projectRepository->findAllByArea($area));
         })->toArray());
     }
+
+    #[Route("/area/{area}", name: "get_area", methods: ['GET'])]
+    public function getArea(Entity\Area $area): Response
+    {
+        return new JsonResponse(new AreaResponse($area, $this->projectRepository->findAllByArea($area)));
+    }
 }

@@ -28,4 +28,10 @@ class TaskController
             return new TaskResponse($task, $this->checklistRepository->findAllByTask($task));
         })->toArray());
     }
+
+    #[Route("/task/{task}", name: "get_task", methods: ['GET'])]
+    public function getTask(Entity\Task $task): Response
+    {
+        return new JsonResponse(new TaskResponse($task, $this->checklistRepository->findAllByTask($task)));
+    }
 }

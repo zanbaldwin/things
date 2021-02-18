@@ -25,4 +25,10 @@ class ChecklistController
             return new ChecklistItemResponse($item);
         })->toArray());
     }
+
+    #[Route("/checklist/item/{item}", name: "get_checklist_item", methods: ['GET'])]
+    public function getChecklistItem(Entity\ChecklistItem $item): Response
+    {
+        return new JsonResponse(new ChecklistItemResponse($item));
+    }
 }

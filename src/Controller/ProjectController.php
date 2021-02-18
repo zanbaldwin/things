@@ -28,4 +28,10 @@ class ProjectController
             return new ProjectResponse($project, $this->headingRepository->findAllByProject($project));
         })->toArray());
     }
+
+    #[Route("/project/{project}", name: "get_project", methods: ['GET'])]
+    public function getProject(Entity\Project $project): Response
+    {
+        return new JsonResponse(new ProjectResponse($project, $this->headingRepository->findAllByProject($project)));
+    }
 }

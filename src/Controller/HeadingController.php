@@ -22,10 +22,16 @@ class HeadingController
     }
 
     #[Route("/project/{project}/headings", name: "get_project_headings", methods: ['GET'])]
-    public function getProjectsByArea(Entity\Project $project): Response
+    public function getHeadingsByProject(Entity\Project $project): Response
     {
         return new JsonResponse($this->headingRepository->findAllByProject($project)->map(function (Entity\Heading $heading): HeadingResponse {
             return new HeadingResponse($heading, $this->taskRepository->findAllByHeading($heading));
         })->toArray());
+    }
+
+    #[Route("/heading/{heading}", name: "get_heading", methods: ['GET'])]
+    public function getHeading(Entity\Heading $heading): Response
+    {
+        return new JsonResponse(new HeadingResponse($heading, $this->taskRepository->findAllByHeading($heading)));
     }
 }
