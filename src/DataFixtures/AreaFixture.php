@@ -1,17 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Entity\Area;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+class AreaFixture extends AbstractFixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-
+        $previous = null;
+        for ($i = 0; $i < 5; $i++) {
+            $area = new Area(bin2hex(random_bytes(10)));
+            $area->follow($previous);
+            $manager->persist($area);
+            $previous = $area;
+        }
         $manager->flush();
     }
 }
