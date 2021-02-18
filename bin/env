@@ -106,7 +106,7 @@ done
 
 # You can specify a different service defined in docker-compose.yaml by prefixing the command with a variable, like:
 #     SERVICE=node bin/env npm i
-SERVICE="${SERVICE:-"server"}"
+SERVICE="${SERVICE:-"php"}"
 
 # Specify the project directory to Docker Compose, but if a specific configuration file has been passed, also add that.
 COMPOSE_CONFIG="--project-directory=\"${PROJECT_DIR}\""
