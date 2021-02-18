@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\HeadingRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -12,7 +13,7 @@ use Symfony\Component\Uid\Ulid;
  * }, indexes={
  *     @ORM\Index(name="fk__headings__project", columns={"project"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=HeadingRepository::class)
  */
 class Heading
 {

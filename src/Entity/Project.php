@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,7 @@ use Symfony\Component\Uid\Ulid;
  * }, indexes={
  *     @ORM\Index(name="fk__projects__area", columns={"area"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=ProjectRepository::class)
  */
 class Project
 {
