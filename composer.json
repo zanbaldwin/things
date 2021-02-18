@@ -20,6 +20,9 @@
         "symfony/uid": "5.2.*",
         "symfony/yaml": "*"
     },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.29"
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": {
