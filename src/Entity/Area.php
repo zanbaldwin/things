@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\AreaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -10,7 +11,7 @@ use Symfony\Component\Uid\Ulid;
  * @ORM\Table(name="areas", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="uqx__areas__follows", columns={"follows"})
  * })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=AreaRepository::class)
  */
 class Area
 {
