@@ -23,7 +23,11 @@ function migrate {
         echo >&2 "Database URL is not valid."
         exit 1;
     fi
+    echo "Parsing DSN: ${1}"
     DB_ENV_SCRIPT="$(dbenv "${1}" 2>/dev/null)"
+    echo "Extracted the following variables:"
+    echo "${DB_ENV_SCRIPT}"
+    echo ""
     eval "${DB_ENV_SCRIPT}"
     # Retry every 5 seconds for a maximum of 18 times (90 seconds total). If MySQL
     # isn't up by then you should probably investigate.

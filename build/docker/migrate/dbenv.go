@@ -60,7 +60,7 @@ func generateShellEnvExportForVars(config *ShellConfig, envVarMap map[string]str
 
 func main() {
 	databaseString := os.Args[1]
-	dbvars := parseDatabaseString(databaseString)
+	dbvars := parseDatabaseString(strings.Trim(databaseString, "\""))
 	if dbvars["driver"] != "mysql" {
 		log.Fatal("Invalid driver; only MySQL is supported.")
 	}

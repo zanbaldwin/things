@@ -1,0 +1,14 @@
+#!/bin/sh
+docker-compose exec database mysqldump \
+    --add-drop-table \
+    --add-drop-trigger \
+    --add-locks \
+    --complete-insert \
+    --disable-keys \
+    --hex-blob \
+    --insert-ignore \
+    --quote-names \
+    --single-transaction \
+    --triggers \
+    --tz-utc \
+    things
