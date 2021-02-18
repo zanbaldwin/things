@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Area;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,8 +21,8 @@ class AreaRepository extends ServiceEntityRepository
         parent::__construct($registry, Area::class);
     }
 
-    /** @return Area[] */
-    public function findAll(): iterable
+    /** @return Collection<Area> */
+    public function findAll(): Collection
     {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(Area::class, 'area');
@@ -33,12 +35,12 @@ class AreaRepository extends ServiceEntityRepository
             FROM `areas` AS `area`
             WHERE `area`.`follows` IS NULL
             UNION ALL
-            SELECT area.*,
+            SELECT `area`.*,
                    `sorted`.`cte_level` + 1 AS `cte_level`
             FROM `sorted`, `areas` as `area`
             WHERE `area`.`follows` = `sorted`.`id`
         ) SELECT %s FROM `sorted` ORDER BY `cte_level`', $selectClause);
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        return $query->getResult();
+        return new ArrayCollection($query->getResult());
     }
 }
