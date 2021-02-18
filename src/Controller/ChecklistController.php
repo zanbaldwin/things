@@ -19,7 +19,7 @@ class ChecklistController
     }
 
     #[Route("/task/{task}/checklist", name: "get_checklist_by_task", methods: ['GET'])]
-    public function getTasksByHeading(Entity\Task $task): Response
+    public function getChecklistItemsByTask(Entity\Task $task): Response
     {
         return new JsonResponse($this->checklistRepository->findAllByTask($task)->map(function (Entity\ChecklistItem $item): ChecklistItemResponse {
             return new ChecklistItemResponse($item);
