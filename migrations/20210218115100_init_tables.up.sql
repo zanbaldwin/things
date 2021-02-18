@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `project_tags` (
 CREATE TABLE IF NOT EXISTS `headings` (
     `id`          BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
     `project`     BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-    `description` TINYTEXT   NOT NULL,
+    `title`       VARCHAR(255)   NOT NULL,
     `archived`    BOOLEAN    NOT NULL DEFAULT FALSE,
     `created_at`  DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

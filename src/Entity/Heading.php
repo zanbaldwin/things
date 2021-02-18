@@ -34,7 +34,7 @@ class Heading
      */
     private Project $project;
 
-    /** @ORM\Column(name="description", type="text", length=255, nullable=false) */
+    /** @ORM\Column(name="title", type="text", length=255, nullable=false) */
     private string $title;
 
     /** @ORM\Column(name="created_at", type="datetime", nullable=false) */

@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Ulid;
  * })
  * @ORM\Entity
  */
-class Checklist
+class ChecklistItem
 {
     use DateTimeTrait;
 
@@ -45,12 +45,12 @@ class Checklist
     private ?\DateTimeInterface $completionDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Checklist::class)
+     * @ORM\ManyToOne(targetEntity=ChecklistItem::class)
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="follows", referencedColumnName="id", nullable=true)
      * })
      */
-    private ?Checklist $follows;
+    private ?ChecklistItem $follows;
 
     public function __construct(Task $task, string $description)
     {
@@ -114,12 +114,12 @@ class Checklist
             : null;
     }
 
-    public function follows(): ?Checklist
+    public function follows(): ?self
     {
         return $this->follows;
     }
 
-    public function follow(?Checklist $follows): void
+    public function follow(?self $follows): void
     {
         $this->follows = $follows;
     }
