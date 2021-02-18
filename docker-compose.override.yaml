@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+    server:
+        image: 'zanbaldwin/things/server/development'
+        build:
+            target: 'development'
+        volumes:
+            -   type: 'bind'
+                source: './public'
+                target: '/srv/public'
+                read_only: true
+
+    php:
+        image: 'zanbaldwin/things/php/development'
+        build:
+            target: 'development'
+        # During development we want the Server/PHP process to run as the same UID as the user running on the host
+        # machine. Doing this prevents PHP-FPM running as root, and therefore unable to switch to another (ie, the
+        # container's www-data) user. This should also nullify the "opcache.preload_user" directive; but when running in
+        # production mode, all source files get copied into the container and owned by www-data, so no user or uid
+        # outside the container is needed.
+        # N.B. UID #1000 is the default user ID for most Linux installations (macOS decides to be difficult and start
+        # from 500 so this project makes no promises this setup will work across all *nix installations).
+        user: '${UID:-1000}'
+        volumes:
+            -   type: 'bind'
+                source: './'
+                target: '/srv'
+                read_only: false
+        environment:
+            PHP_CS_FIXER_IGNORE_ENV: 'yes'
+
+    database:
+        image: 'zanbaldwin/things/database/development'
+        build:
+            target: 'development'
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: ''
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+    migrate:
+        image: 'zanbaldwin/things/migrate/development'
+        build:
+            target: 'development'
+        volumes:
+            -   type: 'bind'
+                source: './migrations'
+                target: '/migrations'
+                read_only: true

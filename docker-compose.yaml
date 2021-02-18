@@ -1,0 +1,82 @@
+version: '3.8'
+
+x-logging:
+  &default-logging
+    driver: 'json-file'
+    options:
+        max-size: '5m'
+        max-file: '1'
+
+services:
+
+    server:
+        image: 'zanbaldwin/things/server/production'
+        build:
+            context: './'
+            dockerfile: './build/docker/server/Dockerfile'
+            args:
+                NGINX_VERSION: '1.19.7-alpine'
+            target: 'production'
+        restart: 'unless-stopped'
+        ports:
+            -   target: 80
+                published: '${WEB_PORT:-80}'
+                protocol: 'tcp'
+                mode: 'host'
+        depends_on: [ 'php' ]
+        logging: *default-logging
+
+    php:
+        image: 'zanbaldwin/things/php/production'
+        build:
+            context: './'
+            dockerfile: './build/docker/php/Dockerfile'
+            args:
+                PHP_VERSION: '8.0-fpm-alpine'
+                COMPOSER_VERSION: '2.0.9'
+            target: 'production'
+        restart: 'unless-stopped'
+        depends_on: [ 'database' ]
+        logging: *default-logging
+
+    database:
+        image: 'zanbaldwin/things/database/production'
+        build:
+            context: './build/docker/database'
+            dockerfile: './Dockerfile'
+            args:
+                MYSQL_VERSION: '8.0.22'
+            target: 'production'
+        restart: 'unless-stopped'
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+            MYSQL_DATABASE: 'things'
+        volumes:
+            -   type: 'volume'
+                source: 'database'
+                target: '/var/run/mysql'
+                read_only: false
+            -   type: 'bind'
+                source: './build/data'
+                target: '/docker-entrypoint-initdb.d'
+                read_only: true
+        logging: *default-logging
+
+    migrate:
+        image: 'zanbaldwin/things/migrate/production'
+        build:
+            context: './'
+            dockerfile: './build/docker/migrate/Dockerfile'
+            args:
+                GO_VERSION: '1.15.6-alpine3.12'
+                ALPINE_VERSION: '3.12'
+            target: 'production'
+        restart: 'no'
+        environment:
+            DATABASE_URL: '${DATABASE_URL}'
+        depends_on: [ 'database' ]
+        logging: *default-logging
+
+volumes:
+    database:
+        driver: 'local'
