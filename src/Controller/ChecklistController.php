@@ -11,14 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ChecklistController
 {
-    private ChecklistRepository $checklistRepository;
-
-    public function __construct(ChecklistRepository $checklistRepository)
-    {
-        $this->checklistRepository = $checklistRepository;
+    public function __construct(
+        private ChecklistRepository $checklistRepository
+    ) {
     }
 
-    #[Route("/task/{task}/checklist", name: "get_checklist_by_task", methods: ['GET'])]
+    #[Route('/task/{task}/checklist', name: 'get_checklist_by_task', methods: ['GET'])]
     public function getChecklistItemsByTask(Entity\Task $task): Response
     {
         return new JsonResponse($this->checklistRepository->findAllByTask($task)->map(function (Entity\ChecklistItem $item): ChecklistItemResponse {
@@ -26,7 +24,7 @@ class ChecklistController
         })->toArray());
     }
 
-    #[Route("/checklist/item/{item}", name: "get_checklist_item", methods: ['GET'])]
+    #[Route('/checklist/item/{item}', name: 'get_checklist_item', methods: ['GET'])]
     public function getChecklistItem(Entity\ChecklistItem $item): Response
     {
         return new JsonResponse(new ChecklistItemResponse($item));

@@ -12,16 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProjectController
 {
-    private ProjectRepository $projectRepository;
-    private HeadingRepository $headingRepository;
-
-    public function __construct(ProjectRepository $projectRepository, HeadingRepository $headingRepository)
-    {
-        $this->projectRepository = $projectRepository;
-        $this->headingRepository = $headingRepository;
+    public function __construct(
+        private ProjectRepository $projectRepository,
+        private HeadingRepository $headingRepository
+    ) {
     }
 
-    #[Route("/area/{area}/projects", name: "get_area_projects", methods: ['GET'])]
+    #[Route('/area/{area}/projects', name: 'get_area_projects', methods: ['GET'])]
     public function getProjectsByArea(Entity\Area $area): Response
     {
         return new JsonResponse($this->projectRepository->findAllByArea($area)->map(function (Entity\Project $project): ProjectResponse {
@@ -29,7 +26,7 @@ class ProjectController
         })->toArray());
     }
 
-    #[Route("/project/{project}", name: "get_project", methods: ['GET'])]
+    #[Route('/project/{project}', name: 'get_project', methods: ['GET'])]
     public function getProject(Entity\Project $project): Response
     {
         return new JsonResponse(new ProjectResponse($project, $this->headingRepository->findAllByProject($project)));

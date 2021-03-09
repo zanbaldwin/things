@@ -6,11 +6,9 @@ use App\Entity;
 
 class ChecklistItemResponse implements \JsonSerializable
 {
-    private Entity\ChecklistItem $item;
-
-    public function __construct(Entity\ChecklistItem $item)
-    {
-        $this->item = $item;
+    public function __construct(
+        private Entity\ChecklistItem $item
+    ) {
     }
 
     public function jsonSerialize()

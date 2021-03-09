@@ -6,14 +6,11 @@ use App\Entity;
 
 class AreaResponse implements \JsonSerializable
 {
-    private Entity\Area $area;
-    /** @var \App\Entity\Project[] */
-    private ?iterable $projects;
-
-    public function __construct(Entity\Area $area, ?iterable $projects = null)
-    {
-        $this->area = $area;
-        $this->projects = $projects;
+    public function __construct(
+        private Entity\Area $area,
+        /** @var \App\Entity\Project[] */
+        private ?iterable $projects = null
+    ) {
     }
 
     public function jsonSerialize()

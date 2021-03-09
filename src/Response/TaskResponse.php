@@ -6,14 +6,11 @@ use App\Entity;
 
 class TaskResponse implements \JsonSerializable
 {
-    private Entity\Task $task;
-    /** @var \App\Entity\ChecklistItem[] */
-    private ?iterable $items;
-
-    public function __construct(Entity\Task $task, ?iterable $items = null)
-    {
-        $this->task = $task;
-        $this->items = $items;
+    public function __construct(
+        private Entity\Task $task,
+        /** @var \App\Entity\ChecklistItem[] */
+        private ?iterable $items = null
+    ) {
     }
 
     public function jsonSerialize()

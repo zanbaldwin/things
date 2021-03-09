@@ -6,14 +6,11 @@ use App\Entity;
 
 class HeadingResponse implements \JsonSerializable
 {
-    private Entity\Heading $heading;
-    /** @var \App\Entity\Task[] */
-    private ?iterable $tasks;
-
-    public function __construct(Entity\Heading $heading, ?iterable $tasks = null)
-    {
-        $this->heading = $heading;
-        $this->tasks = $tasks;
+    public function __construct(
+        private Entity\Heading $heading,
+        /** @var \App\Entity\Task[] */
+        private ?iterable $tasks = null
+    ) {
     }
 
     public function jsonSerialize()

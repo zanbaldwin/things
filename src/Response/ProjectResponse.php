@@ -6,14 +6,11 @@ use App\Entity;
 
 class ProjectResponse implements \JsonSerializable
 {
-    private Entity\Project $project;
-    /** @var \App\Entity\Heading[] */
-    private ?iterable $headings;
-
-    public function __construct(Entity\Project $project, ?iterable $headings = null)
-    {
-        $this->project = $project;
-        $this->headings = $headings;
+    public function __construct(
+        private Entity\Project $project,
+        /** @var \App\Entity\Heading[] */
+        private ?iterable $headings = null
+    ) {
     }
 
     public function jsonSerialize()

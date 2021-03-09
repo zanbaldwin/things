@@ -11,14 +11,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TagController
 {
-    private TagRepository $tagRepository;
-
-    public function __construct(TagRepository $tagRepository)
-    {
-        $this->tagRepository = $tagRepository;
+    public function __construct(
+        private TagRepository $tagRepository
+    ) {
     }
 
-    #[Route("/tags", name: "get_tags", methods: ['GET'])]
+    #[Route('/tags', name: 'get_tags', methods: ['GET'])]
     public function getAllTags(): Response
     {
         return new JsonResponse($this->tagRepository->findAll()->map(function (Tag $tag): TagResponse {

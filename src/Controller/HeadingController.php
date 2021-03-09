@@ -12,16 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HeadingController
 {
-    private HeadingRepository $headingRepository;
-    private TaskRepository $taskRepository;
-
-    public function __construct(HeadingRepository $headingRepository, TaskRepository $taskRepository)
-    {
-        $this->headingRepository = $headingRepository;
-        $this->taskRepository = $taskRepository;
+    public function __construct(
+        private HeadingRepository $headingRepository,
+        private TaskRepository $taskRepository
+    ) {
     }
 
-    #[Route("/project/{project}/headings", name: "get_project_headings", methods: ['GET'])]
+    #[Route('/project/{project}/headings', name: 'get_project_headings', methods: ['GET'])]
     public function getHeadingsByProject(Entity\Project $project): Response
     {
         return new JsonResponse($this->headingRepository->findAllByProject($project)->map(function (Entity\Heading $heading): HeadingResponse {
@@ -29,7 +26,7 @@ class HeadingController
         })->toArray());
     }
 
-    #[Route("/heading/{heading}", name: "get_heading", methods: ['GET'])]
+    #[Route('/heading/{heading}', name: 'get_heading', methods: ['GET'])]
     public function getHeading(Entity\Heading $heading): Response
     {
         return new JsonResponse(new HeadingResponse($heading, $this->taskRepository->findAllByHeading($heading)));
