@@ -13,6 +13,7 @@ class DoctrinePurgeCommand extends Command
     protected static $defaultName = 'doctrine:purge';
     protected static $defaultDescription = 'Purge the database of all data.';
 
+    /** @var string[] */
     private const IMMUTABLE_TABLES = [];
 
     private DbalConnection $conn;
@@ -52,6 +53,5 @@ class DoctrinePurgeCommand extends Command
         $this->conn->exec('SET FOREIGN_KEY_CHECKS=1');
 
         return Command::SUCCESS;
-
     }
 }
