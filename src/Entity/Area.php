@@ -67,6 +67,7 @@ class Area
     {
         return $this->follows;
     }
+
     public function follow(?Area $follows): void
     {
         $this->follows = $follows;
