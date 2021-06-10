@@ -10,12 +10,12 @@ class HeadingFixture extends AbstractFixture implements DependentFixtureInterfac
 {
     public function load(ObjectManager $manager): void
     {
-        /** @var \App\Entity\Project[] $areas */
+        /** @var \App\Entity\Project[] $projects */
         $projects = $manager->getRepository(Entity\Project::class)->findAll();
         foreach ($projects as $project) {
             $previous = null;
             $headingCount = random_int(2, 5);
-            for ($i = 0; $i < $headingCount; $i++) {
+            for ($i = 0; $i < $headingCount; ++$i) {
                 $heading = new Entity\Heading($project, bin2hex(random_bytes(random_int(9, 12))));
                 $heading->follow($previous);
                 $this->probability(5) && $heading->setArchived(true);

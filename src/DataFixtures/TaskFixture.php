@@ -16,7 +16,7 @@ class TaskFixture extends AbstractFixture implements DependentFixtureInterface
             /** @var \App\Entity\Task|null $previous */
             $previous = null;
             $taskCount = random_int(2, 4);
-            for ($i = 0; $i < $taskCount; $i++) {
+            for ($i = 0; $i < $taskCount; ++$i) {
                 $task = new Entity\Task($heading->getProject(), $heading, bin2hex(random_bytes(12)));
                 $task->follow($previous);
                 $task->setNotes(bin2hex(random_bytes(20)));

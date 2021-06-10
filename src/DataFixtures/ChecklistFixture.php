@@ -18,7 +18,7 @@ class ChecklistFixture extends AbstractFixture implements DependentFixtureInterf
                 continue;
             }
             $itemCount = random_int(1, 5);
-            for ($i = 0; $i < $itemCount; $i++) {
+            for ($i = 0; $i < $itemCount; ++$i) {
                 $item = new Entity\ChecklistItem($task, bin2hex(random_bytes(random_int(3, 9))));
                 $item->follow($previous);
                 $item->setCompleted($this->probability(10) ? new \DateTime : null);

@@ -15,7 +15,7 @@ class ProjectFixture extends AbstractFixture implements DependentFixtureInterfac
         foreach ($areas as $area) {
             $previous = null;
             $projectCount = random_int(4, 7);
-            for ($i = 0; $i < $projectCount; $i++) {
+            for ($i = 0; $i < $projectCount; ++$i) {
                 $project = new Entity\Project($area, bin2hex(random_bytes(random_int(7, 10))));
                 $project->follow($previous);
                 $this->probability(50) && $project->setNotes(bin2hex(random_bytes(random_int(5, 20))));

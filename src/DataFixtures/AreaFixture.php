@@ -10,7 +10,7 @@ class AreaFixture extends AbstractFixture
     public function load(ObjectManager $manager): void
     {
         $previous = null;
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $area = new Area(bin2hex(random_bytes(10)));
             $area->follow($previous);
             $manager->persist($area);

@@ -12,9 +12,10 @@ class TagFixture extends AbstractFixture implements DependentFixtureInterface
     {
         $tags = [];
         $tagCount = random_int(15, 25);
-        for ($i = 0; $i < $tagCount; $i++) {
-            $tags[] = $tag = new Entity\Tag(bin2hex(random_bytes(random_int(3, 9))));
+        for ($i = 0; $i < $tagCount; ++$i) {
+            $tag = new Entity\Tag(bin2hex(random_bytes(random_int(3, 9))));
             $manager->persist($tag);
+            $tags[] = $tag;
         }
         $manager->flush();
 
@@ -30,7 +31,6 @@ class TagFixture extends AbstractFixture implements DependentFixtureInterface
         }
         $manager->flush();
 
-        /** @var \App\Entity\Task[] $projects */
         $tasks = $manager->getRepository(Entity\Task::class)->findAll();
         foreach ($tasks as $task) {
             if (!$this->probability(30)) {
