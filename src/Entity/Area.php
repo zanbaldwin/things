@@ -7,46 +7,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
-/**
- * @ORM\Table(name="areas", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="uqx__areas__follows", columns={"follows"})
- * })
- * @ORM\Entity(repositoryClass=AreaRepository::class)
- */
+#[\Doctrine\ORM\Mapping\Table(name: 'areas', uniqueConstraints: ['(name="uqx__areas__follows", columns={"follows"})'])]
+#[\Doctrine\ORM\Mapping\Entity(repositoryClass: AreaRepository::class)]
 class Area
 {
     use DateTimeTrait;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="id", type="ulid", nullable=false)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     */
+    #[\Doctrine\ORM\Mapping\Id]
+    #[\Doctrine\ORM\Mapping\Column(name: 'id', type: 'ulid', nullable: false)]
+    #[\Doctrine\ORM\Mapping\GeneratedValue(strategy: 'CUSTOM')]
+    #[\Doctrine\ORM\Mapping\CustomIdGenerator(class: UlidGenerator::class)]
     private Ulid $id;
 
-    /** @ORM\Column(name="title", type="string", length=255, nullable=false) */
-    private string $title;
-
-    /** @ORM\Column(name="created_at", type="datetime", nullable=false) */
+    #[\Doctrine\ORM\Mapping\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $createdAt;
 
-    /** @ORM\Column(name="updated_at", type="datetime", nullable=false) */
+    #[\Doctrine\ORM\Mapping\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Area::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="follows", referencedColumnName="id", nullable=true)
-     * })
-     */
+    #[\Doctrine\ORM\Mapping\ManyToOne(targetEntity: Area::class)]
+    #[\Doctrine\ORM\Mapping\JoinColumns(['(name="follows", referencedColumnName="id", nullable=true)'])]
     private ?Area $follows;
 
-    public function __construct(string $title)
+    public function __construct(/** @ORM\Column(name="title", type="string", length=255, nullable=false) */
+    private string $title)
     {
         $this->id = new Ulid;
-        $this->title = $title;
-        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->updatedAt = $this->createdAt;
     }
 
     public function getId(): Ulid
@@ -78,7 +65,6 @@ class Area
     {
         return $this->follows;
     }
-
     public function follow(?Area $follows): void
     {
         $this->follows = $follows;
