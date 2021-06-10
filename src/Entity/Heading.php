@@ -7,60 +7,43 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
-/**
- * @ORM\Table(name="headings", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="uqx__headings__follows", columns={"follows"})
- * }, indexes={
- *     @ORM\Index(name="fk__headings__project", columns={"project"})
- * })
- * @ORM\Entity(repositoryClass=HeadingRepository::class)
- */
+#[ORM\Table(name: 'headings')]
+#[ORM\UniqueConstraint(name: 'uqx__headings__follows', columns: ['follows'])]
+#[ORM\Index(columns: ['project'], name: 'fk__headings__project')]
+#[ORM\Entity(repositoryClass: HeadingRepository::class)]
 class Heading
 {
     use DateTimeTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="id", type="ulid", nullable=false)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'ulid', nullable: false)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private Ulid $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Project::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="project", referencedColumnName="id", nullable=false)
-     * })
-     */
-    private Project $project;
-
-    /** @ORM\Column(name="title", type="text", length=255, nullable=false) */
-    private string $title;
-
-    /** @ORM\Column(name="created_at", type="datetime", nullable=false) */
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $createdAt;
 
-    /** @ORM\Column(name="updated_at", type="datetime", nullable=false) */
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $updatedAt;
 
-    /** @ORM\Column(name="archived", type="boolean", nullable=false) */
+    #[ORM\Column(name: 'archived', type: 'boolean', nullable: false)]
     private bool $archived = false;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Heading::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="follows", referencedColumnName="id", nullable=true)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: Heading::class)]
+    #[ORM\JoinColumn(name: 'follows', referencedColumnName: 'id', nullable: true)]
     private ?Heading $follows;
 
-    public function __construct(Project $project, string $title)
-    {
+    public function __construct(
+        #[ORM\ManyToOne(targetEntity: Project::class)]
+        #[ORM\JoinColumn(name: 'project', referencedColumnName: 'id', nullable: false)]
+        private Project $project,
+        #[ORM\Column(name: 'title', type: 'text', length: 255, nullable: false)]
+        private string $title
+    ) {
         $this->id = new Ulid;
-        $this->project = $project;
-        $this->title = $title;
-        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->updatedAt = $this->createdAt;
     }
 
     public function getId(): Ulid

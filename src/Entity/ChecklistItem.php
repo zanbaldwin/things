@@ -6,58 +6,42 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
-/**
- * @ORM\Table(name="checklists", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="uqx__checklists__follows", columns={"follows"})
- * })
- * @ORM\Entity
- */
+#[ORM\Table(name: 'checklists')]
+#[ORM\UniqueConstraint(name: 'uqx__checklists__follows', columns: ['follows'])]
+#[ORM\Entity]
 class ChecklistItem
 {
     use DateTimeTrait;
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="id", type="ulid", nullable=false)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'ulid', nullable: false)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private Ulid $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Task::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="task", referencedColumnName="id", nullable=false)
-     * })
-     */
-    private Task $task;
-
-    /** @ORM\Column(name="description", type="text", length=65535, nullable=false) */
-    private string $description;
-
-    /** @ORM\Column(name="created_at", type="datetime", nullable=false) */
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $createdAt;
 
-    /** @ORM\Column(name="updated_at", type="datetime", nullable=false) */
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: false)]
     private \DateTimeInterface $updatedAt;
 
-    /** @ORM\Column(name="completed", type="datetime", nullable=true) */
+    #[ORM\Column(name: 'completed', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $completionDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ChecklistItem::class)
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="follows", referencedColumnName="id", nullable=true)
-     * })
-     */
+    #[ORM\ManyToOne(targetEntity: ChecklistItem::class)]
+    #[ORM\JoinColumn(name: 'follows', referencedColumnName: 'id', nullable: true)]
     private ?ChecklistItem $follows;
 
-    public function __construct(Task $task, string $description)
-    {
+    public function __construct(
+        #[ORM\ManyToOne(targetEntity: Task::class)]
+        #[ORM\JoinColumn(name: 'task', referencedColumnName: 'id', nullable: false)]
+        private Task $task,
+        #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: false)]
+        private string $description
+    ) {
         $this->id = new Ulid;
-        $this->task = $task;
-        $this->description = $description;
-        $this->createdAt = $this->updatedAt = $this->formatForDatabase(new \DateTime);
+        $this->createdAt = $this->formatForDatabase(new \DateTime);
+        $this->updatedAt = $this->createdAt;
     }
 
     public function getId(): Ulid
