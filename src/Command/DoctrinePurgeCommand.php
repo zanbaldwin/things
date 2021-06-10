@@ -36,11 +36,11 @@ class DoctrinePurgeCommand extends Command
         $sql = 'SELECT TABLE_NAME AS `table` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = :dbName';
         $statement = $this->conn->prepare($sql);
         $statement->execute(['dbName' => $this->conn->getDatabase()]);
-        $tables = array_filter(array_map(function (array $row): ?string {
-            return $row['table'] ?? null;
-        }, $statement->fetchAllAssociative()), function (?string $tableName): bool {
-            return is_string($tableName) && $tableName !== '' && !in_array($tableName, static::IMMUTABLE_TABLES, true);
-        });
+
+        $tables = array_filter(
+            array_map(fn (array $row): ?string => $row['table'] ?? null, $statement->fetchAllAssociative()),
+            fn (?string $tableName): bool => is_string($tableName) && $tableName !== '' && !in_array($tableName, static::IMMUTABLE_TABLES, true)
+        );
 
         $this->conn->exec('SET FOREIGN_KEY_CHECKS=0');
         foreach ($tables as $tableName) {
